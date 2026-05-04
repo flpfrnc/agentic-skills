@@ -1,0 +1,16 @@
+{
+  "servers": {
+    "filesystem": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-filesystem@2026.1.14",
+        "${workspaceFolder}"
+      ]
+    },
+    "git": {
+      "command": "uvx",
+      "args": ["mcp-server-git@2026.1.14", "--repository", "${workspaceFolder}"]
+    }
+  }
+}
