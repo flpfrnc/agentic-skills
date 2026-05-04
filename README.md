@@ -22,46 +22,42 @@ This repository contains GitHub Copilot agents, skills, and MCP configuration fo
 - Filenames and folders use lowercase with hyphens.
 
 ## How to Use in Your Work Repos
-Recommended options (pick one):
-1. Copy the agents, skills, and MCP config into each work repo.
-2. Use this repository as a template to create new work repos.
-3. Add this repository as a git subtree so the files live at the work repo root.
+To maintain a single source of truth for your agents while keeping them accessible in projects like expense_viewer, use the Submodule + Symlink approach.
+
+1. Add as a Submodule in your target repository root:
+
+```Bash
+git submodule add https://github.com/seu-usuario/agentic-skills.git libs/agentic-skills
+git submodule update --init --recursive
+```
+
+2. Run the Setup Script
+> This repository includes a setup-agents.sh script that automatically creates the necessary symbolic links in .github/agents/, ensuring Copilot discovers them regardless of your OS (Windows/Git Bash, macOS, or Linux).
+
+```Bash
+# Run from your target repo root
+sh libs/agentic-skills/setup-agents.sh
+```
+
+Visual Example (Target Repo Structure)
+```
+work-repo/
+├── .github/
+│   └── agents/           
+│       ├── architect.agent.md   --> (link to libs/agentic-skills/...)
+│       └── implementer.agent.md --> (link to libs/agentic-skills/...)
+├── libs/
+│   └── agentic-skills/    <-- The actual submodule
+├── src/
+└── README.md
+```
 
 Notes:
 - Copilot discovers agents/skills from the workspace root. If they live under a subfolder or submodule, you may need a multi-root workspace or a copy into the repo root.
 - The MCP config is optional. Use it only when you want local execution tooling.
 
-## Integration Examples
-Copy into an existing repo (keeps skills local to the project):
-1. Copy .github/agents/ and .github/skills/ into the repo root.
-2. Copy .vscode/mcp.json if you want MCP tools enabled.
-
-Use this repo as a template (new projects):
-1. Create a new repo from this template.
-2. Add your application code on top.
-
-Git subtree (centralized updates, files at repo root):
-1. Add this repo as a subtree under the repo root.
-2. Pull updates from the subtree when you change skills.
-
-Visual example (git subtree at repo root):
-```
-work-repo/
-├── .github/
-│   ├── agents/       <-- from skills repo
-│   └── skills/       <-- from skills repo
-├── .vscode/
-│   └── mcp.json      <-- from skills repo (optional)
-├── src/
-└── README.md
-```
-
-Multi-root workspace (no file copying):
-1. Open your work repo and this skills repo in a multi-root workspace.
-2. Ensure Copilot sees the skills repo as a workspace root.
-
 ## MCP Wiring for Private Repos (Step-by-step)
-1. Pick an integration method (copy, subtree, or multi-root).
+1. Integrate the subtree.
 2. Ensure .vscode/mcp.json exists at the work repo root.
 3. If needed, narrow the default scope by replacing ${workspaceFolder} with a subpath.
 4. Install prerequisites: Node.js (for npx), uv (for uvx), and Git.
@@ -71,10 +67,7 @@ Multi-root workspace (no file copying):
 6. Open the work repo in VS Code, trust the workspace, and reload the window.
 7. Verify tools by asking Copilot to perform a simple file or git action.
 
-Private repo tip:
-- If you do not want to commit MCP config, add .vscode/mcp.json to .gitignore and keep it local.
-
-## Strict MCP Profile (Pinned Versions)
+## Strict MCP Profile
 Use minimal local-only servers and pin versions.
 
 Example (drop-in replacement for .vscode/mcp.json):
