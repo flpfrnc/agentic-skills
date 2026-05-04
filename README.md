@@ -27,7 +27,7 @@ To maintain a single source of truth for your agents while keeping them accessib
 1. Add as a Submodule in your target repository root:
 
 ```Bash
-git submodule add https://github.com/seu-usuario/agentic-skills.git libs/agentic-skills
+git submodule add https://github.com/flpfrnc/agentic-skills.git libs/agentic-skills
 git submodule update --init --recursive
 ```
 
