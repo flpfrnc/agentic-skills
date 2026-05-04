@@ -1,18 +1,17 @@
 #!/bin/bash
 
-# Caminhos base
 TARGET_DIR=".github/agents"
 SKILLS_DIR="libs/agentic-skills"
 
+ROOT_DIR=$(pwd)
+
 echo "Configurando agentes no projeto..."
 
-# Garante que a pasta de destino exista
 if [ ! -d "$TARGET_DIR" ]; then
     mkdir -p "$TARGET_DIR"
     echo "Pasta $TARGET_DIR criada."
 fi
 
-# Detecta o Sistema Operacional
 OS_TYPE="$(uname)"
 case "$OS_TYPE" in
     "Darwin"|"Linux")
@@ -22,9 +21,17 @@ case "$OS_TYPE" in
         ;;
     "MINGW"*|"MSYS"*|"CYGWIN"*)
         echo "Detectado ambiente Windows (Git Bash/Mingw)"
-        # No Windows, usamos o PowerShell via terminal para garantir a criação do Link Simbólico
-        powershell.exe -Command "New-Item -ItemType SymbolicLink -Path '$TARGET_DIR\architect.agent.md' -Value '..\..\$SKILLS_DIR\.github\agents\architect.agent.md' -Force"
-        powershell.exe -Command "New-Item -ItemType SymbolicLink -Path '$TARGET_DIR\implementer.agent.md' -Value '..\..\$SKILLS_DIR\.github\agents\implementer.agent.md' -Force"
+        
+        WIN_ROOT=$(cygpath -w "$ROOT_DIR")
+
+        ARCH_TARGET="$WIN_ROOT\\.github\\agents\\architect.agent.md"
+        ARCH_SOURCE="$WIN_ROOT\\libs\\agentic-skills\\.github\\agents\\architect.agent.md"
+        
+        IMP_TARGET="$WIN_ROOT\\.github\\agents\\implementer.agent.md"
+        IMP_SOURCE="$WIN_ROOT\\libs\\agentic-skills\\.github\\agents\\implementer.agent.md"
+
+        powershell.exe -Command "New-Item -ItemType SymbolicLink -Path '$ARCH_TARGET' -Value '$ARCH_SOURCE' -Force"
+        powershell.exe -Command "New-Item -ItemType SymbolicLink -Path '$IMP_TARGET' -Value '$IMP_SOURCE' -Force"
         ;;
     *)
         echo "Erro: Sistema operacional nao reconhecido: $OS_TYPE"
