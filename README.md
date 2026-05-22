@@ -24,19 +24,22 @@ This repository contains GitHub Copilot agents, skills, and MCP configuration fo
 ## How to Use in Your Work Repos
 To maintain a single source of truth for your agents while keeping them accessible in projects like expense_viewer, use the Submodule + Symlink approach.
 
-1. Add as a Submodule in your target repository root:
+1. Add and init the submodule via the setup script:
 
-```Bash
-git submodule add https://github.com/flpfrnc/agentic-skills.git libs/agentic-skills
-git submodule update --init --recursive
+```bash
+# Run from your target repo root
+curl -sSL https://raw.githubusercontent.com/flpfrnc/agentic-skills/main/setup-agents.sh | bash -s -- add
+curl -sSL https://raw.githubusercontent.com/flpfrnc/agentic-skills/main/setup-agents.sh | bash -s -- init
 ```
 
-2. Run the Setup Script
+> If you already have this repo cloned locally, replace the curl command with the local script path.
+
+2. Create agent symlinks
 > This repository includes a setup-agents.sh script that automatically creates the necessary symbolic links in .github/agents/, ensuring Copilot discovers them regardless of your OS (Windows/Git Bash, macOS, or Linux).
 
-```Bash
+```bash
 # Run from your target repo root
-sh libs/agentic-skills/setup-agents.sh
+sh libs/agentic-skills/setup-agents.sh create-link
 ```
 
 Visual Example (Target Repo Structure)
